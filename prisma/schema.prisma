@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Priority {
+  BAIXA
+  MEDIA
+  ALTA
+}
+
+model Department {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String    @unique
+  machines Machine[]
+}
+
+model Machine {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  code          String?     
+  name          String      @unique
+  description   String?
+  identifier    String?         @unique
+  functionality String?
+  imageUrl      String?
+  department    Department? @relation(fields: [departmentId], references: [id])
+  departmentId  String?     @db.ObjectId
+  stopLogs      StopLog[]
+  fmeas         Fmea[]
+  routines      Routine[]
+  actionPlans   ActionPlan[]
+  serviceOrders ServiceOrder[]
+  materialToMachine MaterialToMachine[]
+}
+
+model ServiceOrderResourceHistory {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  quantity      Int
+  serviceOrder  ServiceOrder @relation(fields: [serviceOrderId], references: [id])
+  serviceOrderId String      @db.ObjectId
+  resource      Resource    @relation(fields: [resourceId], references: [id])
+  resourceId    String      @db.ObjectId
+}
+
+model StopLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  machine   Machine  @relation(fields: [machineId], references: [id])
+  machineId String   @db.ObjectId
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model Fmea {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  machine   Machine  @relation(fields: [machineId], references: [id])
+  machineId String   @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Routine {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  machine   Machine  @relation(fields: [machineId], references: [id])
+  machineId String   @db.ObjectId
+  name      String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model ActionPlan {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  machine   Machine  @relation(fields: [machineId], references: [id])
+  machineId String   @db.ObjectId
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model MaterialToMachine {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  machine   Machine  @relation(fields: [machineId], references: [id])
+  machineId String   @db.ObjectId
+  material  String
+  createdAt DateTime @default(now())
+}
+
+model Resource {
+  id                    String                        @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String
+  serviceOrderResources ServiceOrderResourceHistory[]
+}
+
+model ServiceOrder {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  machine       Machine     @relation(fields: [machineId], references: [id])
+  machineId     String      @db.ObjectId
+  reason        String
+  type          String
+  priority           String
+  machineWasStoped Boolean
+  serviceDescription String
+  servicePerformed String?
+  createdAt     DateTime    @default(now())
+  serviceInitDate DateTime?
+  serviceEndDate DateTime?
+  serviceOrderEndDate DateTime?
+  resources     ServiceOrderResourceHistory[]
+  serviceOrderLink String?
+}

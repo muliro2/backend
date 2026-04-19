@@ -1,0 +1,252 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CompleteServiceOrderInput {
+  """ID da ordem de serviço"""
+  id: String!
+
+  """Data de fim do serviço"""
+  serviceEndDate: String!
+
+  """Link da ordem de serviço impressa preenchida"""
+  serviceOrderLink: String
+}
+
+input CreateMachineInput {
+  """Código da máquina"""
+  code: String
+
+  """Id do departamento"""
+  departmentId: String!
+
+  """Descrição da máquina"""
+  description: String
+
+  """Função da máquina"""
+  functionality: String
+
+  """Identificador da máquina(Placa ou número de série)"""
+  identifier: String
+
+  """URL da imagem da máquina"""
+  imageUrl: String
+
+  """Nome da máquina"""
+  name: String!
+}
+
+input CreateServiceOrderInput {
+  """ID da máquina"""
+  machineId: String!
+
+  """Se a máquina foi parada"""
+  machineWasStoped: Boolean!
+
+  """Prioridade da ordem de serviço"""
+  priority: String!
+
+  """Motivo da ordem de serviço"""
+  reason: String!
+
+  """Descrição do serviço"""
+  serviceDescription: String!
+
+  """Data de fim do serviço"""
+  serviceEndDate: DateTime
+
+  """Data de início do serviço"""
+  serviceInitDate: DateTime
+
+  """Data de fim da ordem de serviço"""
+  serviceOrderEndDate: DateTime
+
+  """Descrição do Serviço realizado"""
+  servicePerformed: String
+
+  """Tipo da ordem de serviço"""
+  type: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Department {
+  id: String!
+  name: String!
+}
+
+input FindAllMachinesInput {
+  code: String
+  departmentId: String
+}
+
+input FindAllServiceOrdersInput {
+  machineId: String
+}
+
+type Machine {
+  """código da máquina"""
+  code: String
+
+  """Departamento ao qual a máquina pertence"""
+  department: Department
+
+  """Descrição da máquina"""
+  description: String
+
+  """Função da máquina"""
+  functionality: String
+
+  """Id da máquina gerado no mongoDB"""
+  id: String!
+
+  """Identificador da máquina (Placa ou número de série)"""
+  identifier: String
+
+  """URL da imagem da máquina"""
+  imageUrl: String
+
+  """Materiais vinculados à máquina"""
+  materialToMachine: [MaterialToMachine!]
+
+  """Nome da máquina"""
+  name: String!
+
+  """Lista de paradas relacionadas à máquina"""
+  stopLogs: [Stoplog!]
+}
+
+type MaterialToMachine {
+  id: String!
+  machineId: String!
+  material: String
+}
+
+type Mutation {
+  completeServiceOrder(completeServiceOrderInput: CompleteServiceOrderInput!): ServiceOrder!
+  createMachine(createMachineInput: CreateMachineInput!): Machine!
+  createServiceOrder(createServiceOrderInput: CreateServiceOrderInput!): ServiceOrder!
+  removeMachine(id: String!): Machine!
+  removeServiceOrder(id: String!): ServiceOrder!
+  updateMachine(updateMachineInput: UpdateMachineInput!): Machine!
+  updateServiceOrder(updateServiceOrderInput: UpdateServiceOrderInput!): ServiceOrder!
+}
+
+type Query {
+  machine(id: String!): Machine!
+  machines(filter: FindAllMachinesInput): [Machine!]!
+  serviceOrder(id: String!): ServiceOrder!
+  serviceOrders(filter: FindAllServiceOrdersInput): [ServiceOrder!]!
+}
+
+type ServiceOrder {
+  """Data de criação"""
+  createdAt: DateTime
+
+  """ID da ordem de serviço"""
+  id: String!
+
+  """Máquina relacionada"""
+  machine: Machine!
+
+  """ID da máquina"""
+  machineId: String!
+
+  """Se a máquina foi parada"""
+  machineWasStoped: Boolean
+
+  """Motivo da ordem de serviço"""
+  reason: String!
+
+  """Descrição do serviço"""
+  serviceDescription: String
+
+  """Data de fim do serviço"""
+  serviceEndDate: DateTime
+
+  """Data de início do serviço"""
+  serviceInitDate: DateTime
+
+  """Data de fim da ordem de serviço"""
+  serviceOrderEndDate: DateTime
+
+  """Link da ordem de serviço impressa preenchida"""
+  serviceOrderLink: String
+
+  """Serviço realizado"""
+  servicePerformed: String
+
+  """Tipo da ordem de serviço"""
+  type: String!
+}
+
+type Stoplog {
+  date: String!
+  id: String!
+  machineId: String!
+  reason: String!
+}
+
+input UpdateMachineInput {
+  """Código da máquina"""
+  code: String
+
+  """Id do departamento"""
+  departmentId: String
+
+  """Descrição da máquina"""
+  description: String
+
+  """Função da máquina"""
+  functionality: String
+  id: String!
+
+  """Identificador da máquina(Placa ou número de série)"""
+  identifier: String
+
+  """URL da imagem da máquina"""
+  imageUrl: String
+
+  """Nome da máquina"""
+  name: String
+}
+
+input UpdateServiceOrderInput {
+  id: String!
+
+  """ID da máquina"""
+  machineId: String
+
+  """Se a máquina foi parada"""
+  machineWasStoped: Boolean
+
+  """Prioridade da ordem de serviço"""
+  priority: String
+
+  """Motivo da ordem de serviço"""
+  reason: String
+
+  """Descrição do serviço"""
+  serviceDescription: String
+
+  """Data de fim do serviço"""
+  serviceEndDate: DateTime
+
+  """Data de início do serviço"""
+  serviceInitDate: DateTime
+
+  """Data de fim da ordem de serviço"""
+  serviceOrderEndDate: DateTime
+
+  """Link da ordem de serviço impressa preenchida"""
+  serviceOrderLink: String
+
+  """Descrição do Serviço realizado"""
+  servicePerformed: String
+
+  """Tipo da ordem de serviço"""
+  type: String
+}
