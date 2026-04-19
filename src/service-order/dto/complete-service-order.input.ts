@@ -14,7 +14,7 @@ export class CompleteServiceOrderInput {
   id: string;
 
   @IsNotEmpty()
-  @IsDateString()
+  //@IsDateString()
   @Field(() => String, { description: 'Data de fim do serviço' })
   serviceEndDate: string;
 

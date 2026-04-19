@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceOrderInput } from './dto/create-service-order.input';
 import { UpdateServiceOrderInput } from './dto/update-service-order.input';
@@ -72,19 +72,30 @@ export class ServiceOrderService {
 		});
 	}
 
-	complete(completeServiceOrderInput: CompleteServiceOrderInput) {
-		const endDate = new Date(completeServiceOrderInput.serviceEndDate);
+	async complete(completeServiceOrderInput: CompleteServiceOrderInput) {
+    console.log("Recebido no Backend:", completeServiceOrderInput);
 
-		return this.prisma.serviceOrder.update({
-			where: { id: completeServiceOrderInput.id },
-			data: {
-				serviceEndDate: endDate,
-				serviceOrderEndDate: endDate,
-				serviceOrderLink: completeServiceOrderInput.serviceOrderLink,
-			},
-			include: serviceOrderInclude,
-		});
-	}
+    if (!completeServiceOrderInput.serviceEndDate) {
+        throw new Error("Data de término não recebida pelo servidor!");
+    }
+
+    const endDate = new Date(completeServiceOrderInput.serviceEndDate);
+
+    // Verificação de segurança de CC:
+    if (isNaN(endDate.getTime())) {
+        console.error("Data inválida convertida:", completeServiceOrderInput.serviceEndDate);
+        throw new Error("Formato de data inválido");
+    }
+
+    return this.prisma.serviceOrder.update({
+        where: { id: completeServiceOrderInput.id },
+        data: {
+            serviceEndDate: endDate,
+            serviceOrderEndDate: endDate,
+            serviceOrderLink: completeServiceOrderInput.serviceOrderLink,
+        },
+    });
+}
 
 	remove(id: string) {
 		return this.prisma.serviceOrder.delete({
