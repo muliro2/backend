@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { MachineModule } from './machine/machine.module';
 import { ServiceOrderModule } from './service-order/service-order.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { IncidentModule } from './incident/incident.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PrismaModule } from './prisma/prisma.module';
     PrismaModule,
     MachineModule,
     ServiceOrderModule,
+    IncidentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

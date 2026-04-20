@@ -19,6 +19,18 @@ enum Priority {
   ALTA
 }
 
+enum IncidentStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum IncidentOccurrenceType {
+  MECANICA
+  ELETRICA
+  SEGURANCA
+}
+
 model Department {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
   name     String    @unique
@@ -116,4 +128,14 @@ model ServiceOrder {
   serviceOrderEndDate DateTime?
   resources     ServiceOrderResourceHistory[]
   serviceOrderLink String?
+}
+
+model Incident {
+  id               String                 @id @default(auto()) @map("_id") @db.ObjectId
+  description      String
+  machineName      String
+  severity         String
+  createdAt        DateTime               @default(now())
+  status           IncidentStatus         @default(OPEN)
+  typeOfOccurrence IncidentOccurrenceType
 }

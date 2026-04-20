@@ -13,6 +13,20 @@ input CompleteServiceOrderInput {
   serviceOrderLink: String
 }
 
+input CreateIncidentInput {
+  """Descricao da ocorrencia"""
+  description: String!
+
+  """Nome da maquina"""
+  machineName: String!
+
+  """Severidade da ocorrencia"""
+  severity: String!
+
+  """Tipo da ocorrencia"""
+  typeOfOccurrence: String!
+}
+
 input CreateMachineInput {
   """Código da máquina"""
   code: String
@@ -87,6 +101,29 @@ input FindAllServiceOrdersInput {
   machineId: String
 }
 
+type Incident {
+  """Data de criacao do incidente"""
+  createdAt: DateTime!
+
+  """Descricao da ocorrencia"""
+  description: String!
+
+  """ID do incidente"""
+  id: String!
+
+  """Nome da maquina"""
+  machineName: String!
+
+  """Severidade da ocorrencia"""
+  severity: String!
+
+  """Status do incidente"""
+  status: String!
+
+  """Tipo da ocorrencia"""
+  typeOfOccurrence: String!
+}
+
 type Machine {
   """código da máquina"""
   code: String
@@ -127,6 +164,7 @@ type MaterialToMachine {
 
 type Mutation {
   completeServiceOrder(completeServiceOrderInput: CompleteServiceOrderInput!): ServiceOrder!
+  createIncident(createIncidentInput: CreateIncidentInput!): Incident!
   createMachine(createMachineInput: CreateMachineInput!): Machine!
   createServiceOrder(createServiceOrderInput: CreateServiceOrderInput!): ServiceOrder!
   removeMachine(id: String!): Machine!
@@ -136,6 +174,7 @@ type Mutation {
 }
 
 type Query {
+  lastIncidents(limit: Int = 5): [Incident!]!
   machine(id: String!): Machine!
   machines(filter: FindAllMachinesInput): [Machine!]!
   serviceOrder(id: String!): ServiceOrder!
