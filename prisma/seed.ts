@@ -8,28 +8,77 @@ async function main() {
   await prisma.department.deleteMany();
 
   console.log('Criando Departamentos...');
-  const deptProducao = await prisma.department.create({
-    data: { name: 'Produção' },
+  const deptPreparacao = await prisma.department.create({
+    data: { name: 'Preparação de Massa' },
   });
 
-  const deptUsinagem = await prisma.department.create({
-    data: { name: 'Setor de Usinagem' },
+  const deptMoldagem = await prisma.department.create({
+    data: { name: 'Moldagem e Extrusão' },
   });
 
-  console.log('Criando Máquinas...');
+  const deptQueima = await prisma.department.create({
+    data: { name: 'Secagem e Queima' },
+  });
+
+  console.log('Criando Máquinas Industriais...');
+  
   const maquina1 = await prisma.machine.create({
     data: {
-      name: 'Tear Circular 04',
-      identifier: 'TC-004',
-      departmentId: deptProducao.id,
+      code: 'MB-01-VACCUM',
+      name: 'Maromba a Vácuo',
+      identifier: 'MB-001',
+      description: 'Extrusora responsável pela compactação e moldagem da argila.',
+      functionality: 'Moldagem de tijolos e blocos cerâmicos',
+      imageUrl: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837',
+      departmentId: deptMoldagem.id,
     },
   });
 
   const maquina2 = await prisma.machine.create({
     data: {
-      name: 'Fresadora CNC',
-      identifier: 'FR-102',
-      departmentId: deptUsinagem.id,
+      code: 'MST-02-B',
+      name: 'Misturador de Eixo Duplo',
+      identifier: 'MST-002',
+      description: 'Equipamento para homogeneização da argila com água.',
+      functionality: 'Mistura e umidificação da matéria-prima',
+      imageUrl: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122',
+      departmentId: deptPreparacao.id,
+    },
+  });
+
+  const maquina3 = await prisma.machine.create({
+    data: {
+      code: 'DS-05-R',
+      name: 'Desintegrador de Rolo',
+      identifier: 'DS-005',
+      description: 'Quebra de torrões brutos de argila vindos do pátio.',
+      functionality: 'Fragmentação primária da argila',
+      imageUrl: 'https://images.unsplash.com/photo-1574689049868-e94ed5301745',
+      departmentId: deptPreparacao.id,
+    },
+  });
+
+  const maquina4 = await prisma.machine.create({
+    data: {
+      code: 'VNT-F1-01',
+      name: 'Exaustor do Forno Hoffman',
+      identifier: 'VNT-001',
+      description: 'Ventilador de alta potência para circulação de ar quente.',
+      functionality: 'Controle de temperatura e tiragem do forno',
+      imageUrl: 'https://images.unsplash.com/photo-1565034946487-077786996e27',
+      departmentId: deptQueima.id,
+    },
+  });
+
+  const maquina5 = await prisma.machine.create({
+    data: {
+      code: 'CRT-A-10',
+      name: 'Cortador Eletrônico de Fios',
+      identifier: 'CRT-010',
+      description: 'Sistema de fios de aço para corte preciso dos blocos na saída da maromba.',
+      functionality: 'Dimensionamento final dos produtos cerâmicos',
+      imageUrl: 'https://images.unsplash.com/photo-1532939163844-547f958e91b4',
+      departmentId: deptMoldagem.id,
     },
   });
 
@@ -37,28 +86,31 @@ async function main() {
   await prisma.serviceOrder.createMany({
     data: [
       {
-        reason: 'Correia de transmissão partida',
+        reason: 'Ruptura de fio de corte',
         type: 'corretiva',
         priority: 'ALTA',
         machineWasStoped: true,
-        serviceDescription: 'Trocar a correia dentada e alinhar as polias do motor principal.',
-        machineId: maquina1.id,
+        serviceDescription: 'Substituição do fio de aço trefilado e recalibração do sensor de presença.',
+        machineId: maquina5.id,
+        createdAt: new Date().toISOString(),
       },
       {
-        reason: 'Lubrificação trimestral',
-        type: 'preventiva',
-        priority: 'BAIXA',
-        machineWasStoped: false,
-        serviceDescription: 'Limpeza geral e aplicação de graxa industrial nos rolamentos.',
-        machineId: maquina2.id,
-      },
-      {
-        reason: 'Ruído excessivo no eixo Z',
-        type: 'planejada',
-        priority: 'MEDIA',
+        reason: 'Vazamento de vácuo na câmara',
+        type: 'corretiva',
+        priority: 'ALTA',
         machineWasStoped: true,
-        serviceDescription: 'Verificar folga no fuso de esferas e reapertar parafusos de fixação.',
+        serviceDescription: 'Troca da gaxeta de vedação da porta de inspeção da maromba.',
+        machineId: maquina1.id,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        reason: 'Manutenção Preventiva Semestral',
+        type: 'preventiva',
+        priority: 'MEDIA',
+        machineWasStoped: false,
+        serviceDescription: 'Lubrificação das engrenagens do misturador e verificação de desgaste das facas.',
         machineId: maquina2.id,
+        createdAt: new Date().toISOString(),
       }
     ],
   });
