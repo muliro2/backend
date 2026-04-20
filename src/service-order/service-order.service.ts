@@ -81,7 +81,6 @@ export class ServiceOrderService {
 
     const endDate = new Date(completeServiceOrderInput.serviceEndDate);
 
-    // Verificação de segurança de CC:
     if (isNaN(endDate.getTime())) {
         console.error("Data inválida convertida:", completeServiceOrderInput.serviceEndDate);
         throw new Error("Formato de data inválido");

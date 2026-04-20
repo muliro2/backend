@@ -157,6 +157,7 @@ type ServiceOrder {
 
   """Se a máquina foi parada"""
   machineWasStoped: Boolean
+  priority: String
 
   """Motivo da ordem de serviço"""
   reason: String!

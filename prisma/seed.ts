@@ -20,7 +20,7 @@ async function main() {
   const maquina1 = await prisma.machine.create({
     data: {
       name: 'Tear Circular 04',
-      identifier: 'TC-004', // Mudei de 'code' para 'identifier'
+      identifier: 'TC-004',
       departmentId: deptProducao.id,
     },
   });
@@ -28,7 +28,7 @@ async function main() {
   const maquina2 = await prisma.machine.create({
     data: {
       name: 'Fresadora CNC',
-      identifier: 'FR-102', // Mudei de 'code' para 'identifier'
+      identifier: 'FR-102',
       departmentId: deptUsinagem.id,
     },
   });
