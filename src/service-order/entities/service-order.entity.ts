@@ -6,6 +6,9 @@ export class ServiceOrder {
   @Field(() => String, { description: 'ID da ordem de serviço' })
   id: string;
 
+  @Field({ nullable: true })
+  priority: string;
+
   @Field(() => Machine, { description: 'Máquina relacionada' })
   machine: Machine;
 
